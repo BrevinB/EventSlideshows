@@ -17,6 +17,15 @@
   <component name="DpaMonitoringSettings">
     <option name="autoShow" value="false" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/BrevinB/EventSlideshows.git",
+    "accountId": "5ad103b3-5068-48b8-af19-3746a97e1771"
+  }
+}]]></component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/EventSlideshow/Components/App.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EventSlideshow/Components/Pages/AdminPage.razor" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
@@ -37,43 +46,46 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2fejdZoMBE8pWrnNmikbE21mvKY" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.GraduationSlideshows: http.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.GraduationSlideshows/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.EventSlideshowPiV1.executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.Publish GraduationSlideshows to folder (1).executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.Publish GraduationSlideshows to folder.executor&quot;: &quot;Run&quot;,
-    &quot;Publish to folder.RaspberryPiV1.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;RiderNuGetOptionsPageId&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.GraduationSlideshows: http.executor": "Run",
+    "Docker.EventSlideshow/Dockerfile: Compose Deployment.executor": "Run",
+    "Docker.GraduationSlideshows/Dockerfile.executor": "Run",
+    "Publish to folder.EventSlideshowPiV1.executor": "Run",
+    "Publish to folder.Publish GraduationSlideshows to folder (1).executor": "Run",
+    "Publish to folder.Publish GraduationSlideshows to folder.executor": "Run",
+    "Publish to folder.RaspberryPiV1.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "RiderNuGetOptionsPageId",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlserver.localdb&quot;,
-      &quot;sqlserver&quot;,
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlserver.localdb",
+      "sqlserver",
+      "sqlite"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Config&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Config"
     ],
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/brevin/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/brevin/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,
-      &quot;/Users/brevin/Library/Application Support/Symbols/src&quot;
+    "rider.external.source.directories": [
+      "/Users/brevin/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
+      "/Users/brevin/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
+      "/Users/brevin/Library/Application Support/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Docker.EventSlideshow/Dockerfile: Compose Deployment">
     <configuration name="EventSlideshowPiV1" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" runtime="linux-arm" self_contained="true" target_folder="$PROJECT_DIR$/GraduationSlideshows/bin/Release/net8.0/linux-arm/publish" target_framework="net8.0" trim_unused_assemblies="true" uuid_high="759364584387071602" uuid_low="-6318558910552687516" />
@@ -187,7 +199,7 @@
       <workItem from="1715640639586" duration="438000" />
       <workItem from="1715641140013" duration="1091000" />
       <workItem from="1715642378716" duration="17873000" />
-      <workItem from="1715815372687" duration="6695000" />
+      <workItem from="1715815372687" duration="7091000" />
     </task>
     <servers />
   </component>
