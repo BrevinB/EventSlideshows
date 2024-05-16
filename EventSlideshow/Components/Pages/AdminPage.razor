@@ -1,0 +1,138 @@
+@page "/Admin"
+@using DataAccessLibrary
+@using Microsoft.AspNetCore.SignalR.Client
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject NavigationManager NavManager
+@inject IPeopleData _db
+@inject IImageData Imagedata 
+
+<h3>Admin Page</h3>
+<h4>Add Graduates</h4>
+
+<MudTextField @bind-Value="FName" Label="Filled" Variant="Variant.Filled"></MudTextField>
+<MudTextField @bind-Value="LName" Label="Filled" Variant="Variant.Filled"></MudTextField>
+
+<MudButton OnClick="CreatePerson">Add</MudButton>
+
+<h4>Current People</h4>
+@if (people is null)
+{
+    <p><em>Loading....</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in people)
+            {
+                <tr>
+                    <td>@person.FName</td>
+                    <td>@person.LName</td>
+                    <td><MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => RemovePerson(person)"></MudIconButton></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<h1 style="align-content: center; padding:  50px;">Images</h1>
+@foreach (var img in images)
+{
+    <MudButton OnClick="() => DeleteImage(img)">
+        <MudImage Src=@img.Data Elevation="25" Class="rounded-lg" Width="200" Height="200" Style="padding: 20px"/>
+    </MudButton>
+    
+}
+
+@code {
+    private List<PersonModel> people;
+    private HubConnection? _hubConnection;
+    string FName = string.Empty;
+    string LName = string.Empty;
+
+    List<Image> images = new List<Image>();
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await GetPeople();
+        await GetImages();
+        
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/slideshowhub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        await _hubConnection.StartAsync();
+    }
+
+    private async Task GetImages()
+    {
+        images.Clear();
+        foreach (var person in people)
+        {
+            var tmp = await Imagedata.GetImages(person);
+            foreach (var img in tmp)
+            {
+                images.Add(img);
+            }
+        }
+    }
+
+    private async Task CreatePerson()
+    {
+        PersonModel newPerson = new PersonModel
+        {
+            FName = FName,
+            LName = LName
+            
+        };
+        
+        await _db.InsertPerson(newPerson);
+        await GetPeople();
+    }
+
+    private async Task RemovePerson(PersonModel _person)
+    {
+        await _db.RemovePerson(_person);
+        await GetPeople();
+    }
+
+    private async Task GetPeople()
+    {
+        people = await _db.GetPeople();
+    }
+
+    private async Task DeleteImage(Image img)
+    {
+        await Imagedata.DeleteImage(img);
+        await GetImages();
+        await SendSignal();
+    }
+    
+    private async Task SendSignal()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.SendAsync("GetImage", true);
+        }
+    }
+
+    public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+}

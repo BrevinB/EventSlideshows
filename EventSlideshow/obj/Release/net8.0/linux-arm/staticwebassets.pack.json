@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/brevin/Documents/GitHub/GraduationSlideshows/GraduationSlideshows/obj/Release/net8.0/linux-arm/scopedcss/projectbundle/GraduationSlideshows.bundle.scp.css",
+      "PackagePath": "staticwebassets/GraduationSlideshows.bundle.scp.css"
+    },
+    {
+      "Id": "/Users/brevin/Documents/GitHub/GraduationSlideshows/GraduationSlideshows/wwwroot/app.css",
+      "PackagePath": "staticwebassets/app.css"
+    },
+    {
+      "Id": "/Users/brevin/Documents/GitHub/GraduationSlideshows/GraduationSlideshows/wwwroot/favicon.ico",
+      "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "obj/Release/net8.0/linux-arm/staticwebassets/msbuild.GraduationSlideshows.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Release/net8.0/linux-arm/staticwebassets/msbuild.build.GraduationSlideshows.props",
+      "PackagePath": "build\\GraduationSlideshows.props"
+    },
+    {
+      "Id": "obj/Release/net8.0/linux-arm/staticwebassets/msbuild.buildMultiTargeting.GraduationSlideshows.props",
+      "PackagePath": "buildMultiTargeting\\GraduationSlideshows.props"
+    },
+    {
+      "Id": "obj/Release/net8.0/linux-arm/staticwebassets/msbuild.buildTransitive.GraduationSlideshows.props",
+      "PackagePath": "buildTransitive\\GraduationSlideshows.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -1,0 +1,14 @@
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/bin/Debug/net8.0/DataAccessLibrary.deps.json
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/bin/Debug/net8.0/DataAccessLibrary.dll
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/bin/Debug/net8.0/DataAccessLibrary.pdb
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.GeneratedMSBuildEditorConfig.editorconfig
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.AssemblyInfoInputs.cache
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.AssemblyInfo.cs
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.csproj.CoreCompileInputs.cache
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.dll
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/refint/DataAccessLibrary.dll
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.pdb
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/ref/DataAccessLibrary.dll
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.csproj.AssemblyReference.cache
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/bin/Debug/net8.0/DataAccessLibrary.runtimeconfig.json
+/Users/brevin/Documents/GitHub/GraduationSlideshows/DataAccessLibrary/obj/Debug/net8.0/DataAccessLibrary.genruntimeconfig.cache

@@ -1,0 +1,257 @@
+@page "/MediaUploadPage"
+@using System.Text
+@using DataAccessLibrary   
+@using System.IO
+@using Microsoft.IdentityModel.Tokens
+@using Microsoft.AspNetCore.SignalR.Client
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject NavigationManager NavManager
+@inject IImageData _ImageData
+@inject IPeopleData _PeopleData
+
+@if (selectedPerson.FName.IsNullOrEmpty())
+{
+    <h1 style="text-align: center; padding-bottom: 20px;">Select Graduate</h1>
+    @if (!people.IsNullOrEmpty())
+    {
+        <MudGrid Class="d-flex justify-center pa-4" Style="padding-top: 20px;">
+        @foreach (var person in people)
+        {
+            <MudItem xl="10" Class="pa-4" >
+                <MudButton Style="@($"color:{Colors.Pink.Lighten5};background:{Colors.Pink.Default}")" Variant="Variant.Filled" @onclick="(() => SelectPerson(person))" FullWidth="true">@person.FName @person.LName</MudButton>
+                <MudSpacer/>
+            </MudItem>
+        }
+        </MudGrid>
+    }
+
+}
+else
+{
+    <h1 style="padding-bottom: 50px; padding-top: 50px; text-align: center;">Upload Pictures For @selectedPerson.FName @selectedPerson.LName</h1>
+    <div class="@AlertClass" style="max-width: fit-content; margin-left: auto; margin-right: auto;" role="alert">
+        @AlertMessage
+    </div>           
+
+    <div class="progress mb-3" style="max-width: fit-content; margin-left: auto; margin-right: auto;">
+        <div role="progressbar" style="width: @ProgressPercentage%" aria-valuemax="100">@ProgressPercentage% Complete</div>
+    </div> 
+    
+    @if (isUploading)
+    {
+        <MudProgressLinear Color="Color.Secondary" Value="@ProgressPercentage" Class="my-7" />
+    }
+    <div style="max-width: fit-content; margin-left: auto; margin-right: auto;">
+    <form @onsubmit="OnSubmit" class="needs-validation" novalidate>
+        <div class="input-group mb-3">
+            <InputFile @key=@(inputFileId) class="form-control" in="inputFile" style="padding-right: 0px;" OnChange="OnInputFileChange" aria-description="uploadButton" required />
+            @if (selectedFile != null && !IsUploadDisabled)
+            {
+                <button class="btn-primary" type="submit" id="uploadButton">
+                    Upload Selected File
+                </button>
+            }
+
+        </div>     
+        @* <div class="invalid-feedback"> *@
+        @*     Please select a file to upload *@
+        @* </div> *@
+    </form>
+    </div>
+    @* @if (files != null) *@
+    @* { *@
+    @*     @if (!images.IsNullOrEmpty()) *@
+    @*     { *@
+    @*         foreach (var i in images) *@
+    @*         { *@
+    @*             <img src=@i.Data asp-append-version="true" width="300px"/> *@
+    @*         } *@
+    @*     } *@
+    @* } *@
+}                                                    
+
+@code
+{
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    List<Image> images = new List<Image>();
+    private List<PersonModel> people;
+    PersonModel selectedPerson = new PersonModel();
+
+    private HubConnection? _hubConnection;
+    
+    MarkupString AlertMessage = new MarkupString("<strong>No file selected</strong>");
+    string AlertClass = "alert alert-info";
+    int ProgressPercentage = 0;
+    IBrowserFile selectedFile;
+    long maxFileSize = 1024L * 1024L * 1024L * 2L;
+    string[] allowedExtensions = { ".jpeg", ".png", ".jpg"};
+    bool IsUploadDisabled = true;
+    bool isUploading = false;
+    private Guid inputFileId = Guid.NewGuid();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        people = await _PeopleData.GetPeople();
+        
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/slideshowhub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        await _hubConnection.StartAsync();
+    }
+
+    private async Task SendSignal()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.SendAsync("GetImage", true);
+        }
+    }
+
+    public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+    
+    private async Task SelectPerson(PersonModel person)
+    {
+        selectedPerson = person;
+        await GetImages();
+    }
+    
+    private async Task formatImages(byte[] buffer)
+    {
+        ProgressPercentage = 75;
+            var format = "image/jpeg";
+            var imageData = $"data:{{format}};base64,{Convert.ToBase64String(buffer)}";
+            StateHasChanged();    
+            await Task.Delay(1);
+            Image newImage = new Image()
+            {
+                PeopleId = selectedPerson.Id,
+                Data = imageData
+            };
+            ProgressPercentage = 85;
+            await _ImageData.SaveImage(newImage);
+            
+        await GetImages();
+    }
+
+    private async Task GetImages()
+    {
+        images = await _ImageData.GetImages(selectedPerson);
+    }
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.GetMultipleFiles()[0];
+        ProgressPercentage = 0;
+        IsUploadDisabled = true;
+
+        if (selectedFile.Size > maxFileSize)
+        {
+            SetAlert("alert alert-danger", "oi oi-ban", $"File size exceeds the limit. Maximum allowed size is <strong>{maxFileSize / (1024 * 1024)} MB</strong>.");
+            return;
+        }
+
+        if (!allowedExtensions.Contains(Path.GetExtension(selectedFile.Name).ToLowerInvariant()))
+        {
+            SetAlert("alert alert-danger", "oi oi-warning", $"Invalid file type. Allowed file types are <strong>{string.Join(", ", allowedExtensions)}</strong>.");
+            return;
+        }
+
+        SetAlert("alert alert-info", "oi oi-info", $"<strong>{selectedFile.Name}</strong> ({selectedFile.Size} bytes) file selected.");
+        IsUploadDisabled = false;
+    }
+
+    private static byte[] GetBytes(Stream stream)
+    {
+        var bytes = new byte[stream.Length];
+        stream.Seek(0, SeekOrigin.Begin);
+        stream.ReadAsync(bytes, 0, bytes.Length);
+        stream.Dispose();
+        return bytes;
+    }
+    
+    private async void OnSubmit()
+    {
+        isUploading = true;
+        IsUploadDisabled = true;
+        StateHasChanged();
+        // while(isUploading)
+        // {
+        //     ProgressPercentage += 1; 
+        // }
+        
+        if (selectedFile != null)
+        {
+            String base64String = "";
+            IsUploadDisabled = true;
+            //Stream stream = selectedFile.OpenReadStream(maxFileSize);
+            var path = $"image\\{selectedFile.Name}";
+           // using FileStream fs = File.Create(path);
+
+            // Set buffer size to 512 KB.
+            int bufferSize = 512 * 1024;
+            byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(bufferSize);
+            int bytesRead;
+            long totalBytesRead = 0;
+            long fileSize = selectedFile.Size;
+            ProgressPercentage = 25;
+            // Use a timer to update the UI every few hundred milliseconds.
+            using var timer = new Timer(_ => InvokeAsync(() => StateHasChanged()));
+            timer.Change(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500));
+
+            try
+            {
+                
+                
+                    //totalBytesRead += bytesRead;
+                    //ProgressPercentage = (int)(100 * totalBytesRead / fileSize);
+                    ProgressPercentage = 25;
+                    await using MemoryStream xs = new MemoryStream();
+                    await selectedFile.OpenReadStream(maxAllowedSize: 2147483648).CopyToAsync(xs);
+                    ProgressPercentage = 50;
+                    byte[] someBytes = GetBytes(xs);
+                    await formatImages(someBytes);
+                    
+                    //await fs.WriteAsync(buffer, 0, bytesRead);
+                
+            }
+            finally
+            {
+                System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
+            }
+
+            // Stop the timer and update the UI with the final progress.
+            timer.Change(Timeout.Infinite, Timeout.Infinite);
+            ProgressPercentage = 100;
+            //await formatImages(buffer);
+            
+            SetAlert("alert alert-success", "oi oi-check", $"<strong>{selectedFile.Name}</strong> ({selectedFile.Size} bytes) file uploaded on server.");
+            await SendSignal();
+            inputFileId = Guid.NewGuid();
+            selectedFile = null;
+            this.StateHasChanged();
+            isUploading = false;
+        }
+        
+    }
+
+
+
+    private 
+        void SetAlert(string alertClass, string iconClass, string message)
+    {
+        AlertClass = alertClass;
+        AlertMessage = new MarkupString($"<span class='{iconClass}' aria-hidden='true'></span> {message}");
+    }
+}
+

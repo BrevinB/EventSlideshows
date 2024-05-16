@@ -1,0 +1,112 @@
+@page "/SlideShowPage/{Id}"
+@using DataAccessLibrary
+@using Microsoft.IdentityModel.Tokens
+@using Microsoft.AspNetCore.SignalR.Client
+@rendermode InteractiveServer
+@implements IAsyncDisposable
+@inject NavigationManager NavManager
+@inject IImageData _ImageData
+@inject IPeopleData _PeopleData
+
+<div style="min-height: 100%; min-width: 100%; background: black; " class="align-content-center">
+    <div style="width: 50%; margin: auto; padding-top: 50px;">
+    @if (person.FName.IsNullOrEmpty() && images.IsNullOrEmpty())
+    {
+        <h3>Loading......</h3>
+    }
+    else
+    {
+        @* <h1>@person.FName @person.LName's Graduation Slideshow</h1> *@
+
+        <MudCarousel Class="align-content-center" Style="height: 1300px; width: 1000px;" ShowArrows="false" ShowBullets="false" EnableSwipeGesture="false" AutoCycle="@autocycle" TData="object">
+            @foreach (var image in images)
+            {
+                <MudCarouselItem Transition="transition">
+
+                    <MudImage ObjectFit="ObjectFit.ScaleDown" Height="800" Width="800" Fluid="true" src="@image.Data" asp-append-version="true"/>
+
+                </MudCarouselItem>
+            }
+        </MudCarousel>
+    }
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string Id { get; set; }
+
+    private HubConnection? _hubConnection;
+    
+    public PersonModel person = new PersonModel();
+    
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Slide;
+
+    private List<Image> images = new List<Image>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<PersonModel> tmpPerson = new List<PersonModel>();
+        tmpPerson = await _PeopleData.GetPeople();
+        foreach (var _person in tmpPerson)
+        {
+            if (_person.Id == Int32.Parse(Id))
+            {
+                person = _person;
+            }
+        }
+
+        await GetImages();
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/slideshowhub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On<bool>("GetImage", async refresh =>
+        {
+            if (refresh)
+            {
+                await GetImages();
+                InvokeAsync(StateHasChanged);
+                    
+            }
+        });
+
+        await _hubConnection.StartAsync();
+    }
+
+    protected async Task OnParameterSetAsync()
+    {
+         List<PersonModel> tmpPerson = new List<PersonModel>();
+         tmpPerson = await _PeopleData.GetPeople();
+         foreach (var _person in tmpPerson)
+         {
+             if (_person.Id == Int32.Parse(Id))
+             {
+                 person = _person;
+             }
+         }
+         
+         StateHasChanged();
+    }
+
+    private async Task GetImages()
+    {
+        images.Clear();
+        images = await _ImageData.GetImages(person);
+    }
+    
+    public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+}

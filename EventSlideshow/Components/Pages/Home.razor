@@ -1,0 +1,35 @@
+﻿@page "/"
+@using DataAccessLibrary
+@using Microsoft.IdentityModel.Tokens
+@inject NavigationManager NavManager
+@rendermode InteractiveServer
+@inject IPeopleData Db
+
+<h1 style="width:  50%; margin:  auto; padding:  50px;"><b>Select Slideshow</b></h1>
+@if (!_people.IsNullOrEmpty())
+{
+    <MudGrid>
+    @foreach (var name in _people)
+    {
+        <MudItem xs="10" Style="margin: auto; padding-top: 20px;">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="(() => NavigatePage(name))" FullWidth="true">@name.FName @name.LName</MudButton>
+        </MudItem>
+    }
+    </MudGrid>
+}
+
+@code {
+    private List<PersonModel> _people = [];
+    
+    protected override async Task OnInitializedAsync()
+    {
+        
+        _people = await Db.GetPeople();
+        
+    }
+    
+    private void NavigatePage(PersonModel name)
+    {
+       NavManager.NavigateTo($"/SlideShowPage/{name.Id}");
+    }
+}
