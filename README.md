@@ -13,7 +13,12 @@ host of the event.
 * CSS
 * JavaScript
 
-# Demo
+# Example Images
+<img width="1321" alt="Screenshot 2024-09-27 at 11 32 39 AM" src="https://github.com/user-attachments/assets/d366e97b-87b2-41ac-b246-ec492059fa44">
+<img width="1313" alt="Screenshot 2024-09-27 at 11 34 49 AM" src="https://github.com/user-attachments/assets/fa27f7cb-cce3-4ec4-85c6-6fad11ca98c7">
+<img width="1310" alt="Screenshot 2024-09-27 at 11 34 58 AM" src="https://github.com/user-attachments/assets/0822f088-3452-4579-95f2-1d519579071a">
+<img width="1163" alt="Screenshot 2024-09-27 at 11 38 22 AM" src="https://github.com/user-attachments/assets/d4cd72b4-158a-445c-8992-3b6d00da9f5c">
+
 
 # I'm Most Proud Of....
 There are two things I'm proud of with this project. 1. I came up with the idea a week before the grad party so I was short on time and was able to get it done. I
